@@ -1,0 +1,60 @@
+{
+  "language": "bengali",
+  "model": "xlmr_base",
+  "data_pct": 0.1,
+  "seed": 42,
+  "run_tag": "",
+  "train_examples": 1088,
+  "train_time_sec": 289.89,
+  "inference_time_sec": 7.71,
+  "checkpoint_path": "D:\\LRI\\checkpoints\\bengali_xlmr_base_0.1_42",
+  "metrics": {
+    "loss": 0.8294205665588379,
+    "accuracy": 0.6470588235294118,
+    "macro_f1": 0.5863774910972989,
+    "macro_precision": 0.6086532144028699,
+    "macro_recall": 0.5972773595231975,
+    "weighted_f1": 0.6234304013925495,
+    "per_class": {
+      "negative": {
+        "precision": 0.6618705035971223,
+        "recall": 0.7796610169491526,
+        "f1": 0.7159533073929961,
+        "support": 472
+      },
+      "neutral": {
+        "precision": 0.4906832298136646,
+        "recall": 0.24307692307692308,
+        "f1": 0.32510288065843623,
+        "support": 325
+      },
+      "positive": {
+        "precision": 0.6734059097978227,
+        "recall": 0.7690941385435168,
+        "f1": 0.7180762852404643,
+        "support": 563
+      }
+    },
+    "confusion_matrix": [
+      [
+        368,
+        33,
+        71
+      ],
+      [
+        107,
+        79,
+        139
+      ],
+      [
+        81,
+        49,
+        433
+      ]
+    ],
+    "runtime": 7.7056,
+    "samples_per_second": 176.496,
+    "steps_per_second": 11.031,
+    "epoch": 5.0
+  }
+}
