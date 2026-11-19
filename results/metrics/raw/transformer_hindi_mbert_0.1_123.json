@@ -1,0 +1,60 @@
+{
+  "language": "hindi",
+  "model": "mbert",
+  "data_pct": 0.1,
+  "seed": 123,
+  "run_tag": "",
+  "train_examples": 248,
+  "train_time_sec": 25.97,
+  "inference_time_sec": 0.68,
+  "checkpoint_path": "D:\\LRI\\checkpoints\\hindi_mbert_0.1_123",
+  "metrics": {
+    "loss": 1.066114068031311,
+    "accuracy": 0.4290322580645161,
+    "macro_f1": 0.33721996332615806,
+    "macro_precision": 0.28369393734505294,
+    "macro_recall": 0.41584699453551915,
+    "weighted_f1": 0.348807971545625,
+    "per_class": {
+      "negative": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 98
+      },
+      "neutral": {
+        "precision": 0.39705882352941174,
+        "recall": 0.6,
+        "f1": 0.4778761061946903,
+        "support": 90
+      },
+      "positive": {
+        "precision": 0.4540229885057471,
+        "recall": 0.6475409836065574,
+        "f1": 0.5337837837837838,
+        "support": 122
+      }
+    },
+    "confusion_matrix": [
+      [
+        0,
+        39,
+        59
+      ],
+      [
+        0,
+        54,
+        36
+      ],
+      [
+        0,
+        43,
+        79
+      ]
+    ],
+    "runtime": 0.6781,
+    "samples_per_second": 457.136,
+    "steps_per_second": 29.493,
+    "epoch": 4.0
+  }
+}

@@ -23,20 +23,40 @@ languages:
     text_column: "text"
     label_column: "label"
     num_classes: 3
-    label_names: ["negative", "neutral", "positive"]
+    # Verified via datasets ClassLabel schema: ClassLabel(names=['negative','neutral','positive'])
+    raw_label_to_name: {0: "negative", 1: "neutral", 2: "positive"}
   bengali:
     code: "bn"
     dataset_name: "khondoker/SentNoB"
     dataset_config: null
-    text_column: "text"            # verify against actual dataset card at download time
-    label_column: "label"
+    text_column: "Data"             # verified against actual parquet columns at audit time
+    label_column: "Label"
     num_classes: 3
-    label_names: ["negative", "neutral", "positive"]  # verify exact int->label mapping at audit time
+    # Verified via HF dataset card: "positive (1), negative (2), or neutral (0)" — OPPOSITE
+    # ordering from Hindi IITP. Must be remapped to the canonical scheme below during
+    # preprocessing; never assume raw ints are directly comparable across languages.
+    raw_label_to_name: {0: "neutral", 1: "positive", 2: "negative"}
+
+# Canonical label scheme both languages are remapped to during preprocessing
+# (src/data/preprocessing.py), so downstream training/eval use consistent integer ids.
+canonical_label_names: ["negative", "neutral", "positive"]
+canonical_name_to_id: {"negative": 0, "neutral": 1, "positive": 2}
 
 cross_lingual_eval:
   dataset_name: "ai4bharat/IndicSentiment"
-  configs: ["hi", "bn"]
-  note: "Dev+test only, no train split — evaluation-only parallel benchmark."
+  configs: ["translation-hi", "translation-bn"]   # actual available config names, verified at download time
+  text_column: "INDIC REVIEW"
+  label_column: "LABEL"
+  # VERIFIED directly from the downloaded data (correcting an earlier, wrong secondhand
+  # claim of a 3-class pos/neg/neutral scheme): this benchmark is STRICTLY BINARY
+  # (Positive/Negative only, no Neutral), and the test split has some missing (None)
+  # labels that must be dropped before evaluation.
+  raw_label_to_canonical_name: {"Negative": "negative", "Positive": "positive"}
+  note: >
+    Dev+test only, no train split — evaluation-only parallel benchmark. Only 2 of the
+    3 canonical classes are ever present; a 3-class-trained model's 'neutral'
+    predictions are simply counted as wrong against this benchmark, which is reported
+    explicitly as a scope limitation, not glossed over as a fair 3-way comparison.
 
 data_budgets: [0.10, 0.50, 1.00]   # reduced from [0.10, 0.25, 0.50, 1.00]
 

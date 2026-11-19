@@ -21,6 +21,14 @@ How effectively can multilingual transformer models perform Hindi and Bengali se
 
 **Documented limitation:** IITP (Hindi) is formal movie/product review text; SentNoB (Bengali) is noisy, informal social-media text. Both share the same 3-class scheme, but domain/register differs — a genuine confound for cross-lingual transfer, reported as a limitation rather than treated as a controlled comparison.
 
+**Critical verified finding — label encodings are NOT aligned across the two raw datasets:**
+- Hindi IITP (`ai4bharat/indic_glue`, `iitp-mr.hi`): confirmed via the dataset's own `ClassLabel` schema — `0=negative, 1=neutral, 2=positive`.
+- Bengali SentNoB (`khondoker/SentNoB`): confirmed via the HF dataset card text ("positive (1), negative (2), or neutral (0)") — `0=neutral, 1=positive, 2=negative`.
+
+These are opposite orderings. Training or evaluating across languages on the raw integer labels without remapping would silently corrupt every cross-lingual and combined experiment. Both datasets are therefore remapped to a shared canonical scheme (`negative=0, neutral=1, positive=2`, see `configs/config.yaml: canonical_name_to_id`) during preprocessing, before any split, augmentation, or training.
+
+**Correction to an earlier (secondhand, incorrect) claim about IndicSentiment:** an initial research pass reported IndicSentiment as a 3-class (positive/negative/neutral) parallel benchmark. Direct inspection of the downloaded data (`data/raw/indicsentiment/`) shows this was wrong — the dataset is **strictly binary** (`LABEL` ∈ {"Negative", "Positive"} only; no "Neutral" ever appears across dev or test, for either language), and the test split additionally has some missing (`None`) labels that must be dropped before evaluation. This is corrected in `configs/config.yaml` (`cross_lingual_eval`). Consequence: when evaluating a 3-class-trained model on this benchmark, any "neutral" prediction is automatically wrong by construction — this is reported as an explicit scope limitation of the cross-lingual eval set, not treated as a fair 3-way comparison.
+
 Datasets rejected after audit: `SentiHin-2500` (LLM-synthetic, not real text), `Mahadih534/Bangla-Large-Sentiment_Analysis` (heavily templated/duplicated), MTEB-repackaged subsamples (undocumented/inconsistent label definitions).
 
 ## Literature Review Summary

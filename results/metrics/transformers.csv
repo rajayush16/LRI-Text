@@ -1,0 +1,6 @@
+language,model,data_pct,seed,run_tag,train_examples,train_time_sec,inference_time_sec,accuracy,macro_f1,weighted_f1,checkpoint_path
+hindi,mbert,0.1,42,,248,36.05,0.67,0.49032258064516127,0.46625339048390896,0.4776626342293063,D:\LRI\checkpoints\hindi_mbert_0.1_42
+hindi,mbert,0.1,42,,248,35.71,0.69,0.49032258064516127,0.46625339048390896,0.4776626342293063,D:\LRI\checkpoints\hindi_mbert_0.1_42
+hindi,mbert,0.1,123,,248,25.97,0.68,0.4290322580645161,0.33721996332615806,0.348807971545625,D:\LRI\checkpoints\hindi_mbert_0.1_123
+hindi,mbert,0.5,42,,1238,69.7,0.72,0.5612903225806452,0.5551126320993999,0.5612033193120697,D:\LRI\checkpoints\hindi_mbert_0.5_42
+hindi,mbert,0.5,123,,1238,92.07,0.66,0.5419354838709678,0.5399996340213732,0.5431198025132107,D:\LRI\checkpoints\hindi_mbert_0.5_123

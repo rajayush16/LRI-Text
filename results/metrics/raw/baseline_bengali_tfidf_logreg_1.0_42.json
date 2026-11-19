@@ -1,0 +1,54 @@
+{
+  "experiment": "A_baselines",
+  "language": "bengali",
+  "model": "tfidf_logreg",
+  "data_pct": 1.0,
+  "seed": 42,
+  "train_examples": 10880,
+  "train_time_sec": 0.408,
+  "inference_time_sec": 0.001,
+  "metrics": {
+    "accuracy": 0.5852941176470589,
+    "macro_f1": 0.5333188634404183,
+    "macro_precision": 0.5507353695485846,
+    "macro_recall": 0.5406267759094625,
+    "weighted_f1": 0.566382266491071,
+    "per_class": {
+      "negative": {
+        "precision": 0.5909943714821764,
+        "recall": 0.6673728813559322,
+        "f1": 0.6268656716417911,
+        "support": 472
+      },
+      "neutral": {
+        "precision": 0.4425287356321839,
+        "recall": 0.23692307692307693,
+        "f1": 0.30861723446893785,
+        "support": 325
+      },
+      "positive": {
+        "precision": 0.6186830015313936,
+        "recall": 0.7175843694493783,
+        "f1": 0.6644736842105263,
+        "support": 563
+      }
+    },
+    "confusion_matrix": [
+      [
+        315,
+        43,
+        114
+      ],
+      [
+        113,
+        77,
+        135
+      ],
+      [
+        105,
+        54,
+        404
+      ]
+    ]
+  }
+}
