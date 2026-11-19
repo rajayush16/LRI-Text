@@ -1,0 +1,67 @@
+# Global project configuration — LRI-Text
+# Low-Resource Indian Language Text Classification Using Multilingual Transformers
+
+project:
+  name: "LRI-Text"
+  title: "A Data-Efficient Framework for Hindi and Bengali Sentiment Classification: Evaluating Multilingual Transformers under Low-Resource, Augmented, and Cross-Lingual Settings"
+  seed_list: [42, 123]   # 2 seeds per experiment (reduced scope decision)
+
+paths:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  data_external: "data/external"
+  checkpoints: "checkpoints"
+  results_metrics: "results/metrics"
+  results_figures: "results/figures"
+  results_logs: "results/logs"
+
+languages:
+  hindi:
+    code: "hi"
+    dataset_name: "ai4bharat/indic_glue"
+    dataset_config: "iitp-mr.hi"   # IITP Movie Reviews, 3-class neg/neu/pos
+    text_column: "text"
+    label_column: "label"
+    num_classes: 3
+    label_names: ["negative", "neutral", "positive"]
+  bengali:
+    code: "bn"
+    dataset_name: "khondoker/SentNoB"
+    dataset_config: null
+    text_column: "text"            # verify against actual dataset card at download time
+    label_column: "label"
+    num_classes: 3
+    label_names: ["negative", "neutral", "positive"]  # verify exact int->label mapping at audit time
+
+cross_lingual_eval:
+  dataset_name: "ai4bharat/IndicSentiment"
+  configs: ["hi", "bn"]
+  note: "Dev+test only, no train split — evaluation-only parallel benchmark."
+
+data_budgets: [0.10, 0.50, 1.00]   # reduced from [0.10, 0.25, 0.50, 1.00]
+
+few_shot:
+  shots_per_class: [16, 32]        # reduced from [8, 16, 32, 64]
+
+training:
+  max_seq_length: 128
+  batch_size: 8
+  gradient_accumulation_steps: 2   # effective batch size 16
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  num_epochs: 5
+  early_stopping_patience: 2
+  fp16: true
+  optimizer: "adamw"
+  eval_metric_for_best_model: "macro_f1"
+
+augmentation:
+  methods: ["back_translation"]    # contextual MLM substitution = stretch goal, not in core scope
+  pivot_language: "en"
+  max_augmented_ratio: 1.0         # at most double the original training set size
+  apply_to: ["train_only"]         # never val/test
+
+hardware:
+  device_preference: "cuda"
+  fallback: "cpu"
+  notes: "Target GPU: NVIDIA RTX 3060 Laptop, 6GB VRAM. Use fp16 + grad accumulation to fit base-size models."

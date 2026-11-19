@@ -1,0 +1,31 @@
+# Core ML / NLP
+# NOTE: install PyTorch separately with the CUDA-enabled wheel first, e.g.:
+#   pip install torch==2.4.1 --index-url https://download.pytorch.org/whl/cu121
+# then install the rest of this file.
+transformers==4.44.2
+datasets==2.21.0
+accelerate==0.34.2
+tokenizers==0.19.1
+sentencepiece==0.2.0
+sacremoses==0.1.1
+evaluate==0.4.3
+
+# Classical ML / data
+scikit-learn==1.5.1
+pandas==2.2.2
+numpy==1.26.4
+scipy==1.13.1
+
+# Visualization
+matplotlib==3.9.2
+seaborn==0.13.2
+
+# Config / utils
+pyyaml==6.0.2
+tqdm==4.66.5
+
+# Demo app
+streamlit==1.38.0
+
+# Testing
+pytest==8.3.2

@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Data (raw datasets are re-downloadable; never commit them)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/external/*
+!data/external/.gitkeep
+
+# Model artifacts
+checkpoints/*
+!checkpoints/.gitkeep
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# Results can be large; keep metrics/figures tracked but not raw logs if huge
+results/logs/*
+!results/logs/.gitkeep
+
+# Secrets / env
+.env
+*.local.yaml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

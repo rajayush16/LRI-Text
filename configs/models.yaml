@@ -1,0 +1,51 @@
+# Model registry — LRI-Text
+# Verified checkpoints and their actual architecture compatibility.
+
+baselines:
+  tfidf_logreg:
+    type: "sklearn"
+    vectorizer: "tfidf"
+    classifier: "logistic_regression"
+    max_features: 20000
+    ngram_range: [1, 2]
+  tfidf_svm:
+    type: "sklearn"
+    vectorizer: "tfidf"
+    classifier: "linear_svm"
+    max_features: 20000
+    ngram_range: [1, 2]
+
+transformers:
+  mbert:
+    checkpoint: "google-bert/bert-base-multilingual-cased"
+    architecture: "BertForSequenceClassification"
+    requires_custom_head: false
+    hidden_size: 768
+    notes: "Full sequence-classification checkpoint family; standard AutoModelForSequenceClassification load."
+
+  xlmr_base:
+    checkpoint: "FacebookAI/xlm-roberta-base"
+    architecture: "XLMRobertaForSequenceClassification"
+    requires_custom_head: false
+    hidden_size: 768
+    notes: "Standard AutoModelForSequenceClassification load."
+
+  indicbert_v2:
+    checkpoint: "ai4bharat/IndicBERTv2-MLM-only"
+    architecture: "AlbertForSequenceClassification or BertForSequenceClassification (verify at load time)"
+    requires_custom_head: true
+    hidden_size: 768
+    notes: >
+      MLM-only checkpoint — no pretrained classification head. Must load backbone with
+      AutoModelForSequenceClassification (which attaches a randomly-initialized head) and
+      verify the base architecture class actually loaded before trusting results.
+
+  muril_base:
+    checkpoint: "google/muril-base-cased"
+    architecture: "BertForSequenceClassification"
+    requires_custom_head: false
+    hidden_size: 768
+    status: "stretch_goal"
+    notes: "Preprint-only paper (arXiv:2103.10730). Include only if time/compute permits after core 3-model comparison."
+
+active_models: ["mbert", "xlmr_base", "indicbert_v2"]   # core reduced-scope comparison set

@@ -1,0 +1,52 @@
+# Experiment registry — LRI-Text
+# Each experiment entry is logged with full provenance in results/metrics/.
+# Columns recorded per run: model, language, dataset, data_pct, seed, augmentation,
+# hyperparams, train_time, inference_time, metrics, checkpoint_path.
+
+experiment_A_baselines:
+  description: "Traditional ML baselines (TF-IDF + LogReg, TF-IDF + SVM) on full training data."
+  models: ["tfidf_logreg", "tfidf_svm"]
+  languages: ["hindi", "bengali"]
+  data_budgets: [1.00]
+  seeds: [42, 123]
+
+experiment_B_full_finetune:
+  description: "Transformer fine-tuning with 100% training data, per language."
+  models: ["mbert", "xlmr_base", "indicbert_v2"]
+  languages: ["hindi", "bengali"]
+  data_budgets: [1.00]
+  seeds: [42, 123]
+
+experiment_C_low_resource:
+  description: "Transformer fine-tuning at reduced data budgets (10%, 50%)."
+  models: ["mbert", "xlmr_base", "indicbert_v2"]
+  languages: ["hindi", "bengali"]
+  data_budgets: [0.10, 0.50]
+  seeds: [42, 123]
+
+experiment_D_augmentation:
+  description: "Back-translation augmentation at the 10% and 50% data budgets, vs. no-augmentation baseline at same budgets (from Experiment C)."
+  models: ["mbert", "xlmr_base", "indicbert_v2"]
+  languages: ["hindi", "bengali"]
+  data_budgets: [0.10, 0.50]
+  seeds: [42, 123]
+  augmentation: ["back_translation"]
+
+experiment_E_few_shot:
+  description: "Few-shot supervised fine-tuning with 16 and 32 examples/class, class-balanced sampling."
+  models: ["mbert", "xlmr_base", "indicbert_v2"]
+  languages: ["hindi", "bengali"]
+  shots_per_class: [16, 32]
+  seeds: [42, 123]
+
+experiment_F_cross_lingual:
+  description: "Cross-lingual transfer: train on Hindi, evaluate on Bengali and vice versa. Uses IndicSentiment as the parallel evaluation benchmark; documents domain/register mismatch between IITP and SentNoB as a limitation."
+  models: ["mbert", "xlmr_base", "indicbert_v2"]
+  directions: ["hi_to_bn", "bn_to_hi"]
+  seeds: [42, 123]
+  eval_dataset: "ai4bharat/IndicSentiment"
+
+notes:
+  - "MuRIL excluded from core scope (configs/models.yaml: active_models). May be added as a stretch-goal re-run of Experiments B/C/F only."
+  - "25% data budget and 8/64 few-shot sizes dropped from the original master-prompt scope for feasibility on 6GB VRAM; documented as a scope limitation, not a methodological gap."
+  - "3rd random seed dropped (2 seeds used) for the same feasibility reason; variance analysis will be reported with the caveat of a smaller seed sample."
