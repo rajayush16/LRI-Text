@@ -84,6 +84,9 @@ def run_one(language: str, model_key: str, data_pct: float, seed: int, cfg: dict
         seed=seed,
         report_to=[],
         disable_tqdm=True,
+        # Some checkpoints (e.g. IndicBERT v2) load with non-contiguous tensors that
+        # safetensors refuses to serialize; .bin via torch.save has no such restriction.
+        save_safetensors=False,
     )
 
     trainer = Trainer(
@@ -164,11 +167,18 @@ def save_run(result: dict, cfg: dict, csv_name: str = "transformers.csv") -> Non
         df_row.to_csv(summary_path, mode="w", header=True, index=False)
 
 
+def _already_done(language: str, model_key: str, data_pct: float, seed: int, cfg: dict, run_tag: str = "") -> bool:
+    raw_dir = Path(PROJECT_ROOT) / cfg["paths"]["results_metrics"] / "raw"
+    fname = f"transformer_{language}_{model_key}_{data_pct}_{seed}{('_' + run_tag) if run_tag else ''}.json"
+    return (raw_dir / fname).exists()
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--experiment", required=True, choices=["experiment_B_full_finetune", "experiment_C_low_resource"])
     parser.add_argument("--languages", nargs="+", default=None)
     parser.add_argument("--models", nargs="+", default=None)
+    parser.add_argument("--resume", action="store_true", help="Skip (language, model, pct, seed) combos with an existing raw result JSON")
     args = parser.parse_args()
 
     config = load_config()
@@ -182,6 +192,9 @@ if __name__ == "__main__":
         for model_key in model_keys:
             for data_pct in exp_config["data_budgets"]:
                 for seed in exp_config["seeds"]:
+                    if args.resume and _already_done(language, model_key, data_pct, seed, config):
+                        logger.info(f"SKIP (already done): {language} | {model_key} | pct={data_pct} | seed={seed}")
+                        continue
                     logger.info(f"=== RUN: {language} | {model_key} | pct={data_pct} | seed={seed} ===")
                     res = run_one(language, model_key, data_pct, seed, config, models_config)
                     save_run(res, config)
