@@ -13,7 +13,7 @@ import pandas as pd
 from src.augmentation.back_translation import augment_dataframe, load_translation_model
 from src.data.loader import load_processed
 from src.data.sampling import stratified_subset
-from src.training.trainer import run_one, save_run
+from src.training.trainer import _already_done, run_one, save_run
 from src.utils.config import load_config
 from src.utils.logging import get_logger
 
@@ -24,6 +24,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--languages", nargs="+", default=None)
     parser.add_argument("--models", nargs="+", default=None)
+    parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
 
     config = load_config()
@@ -42,6 +43,14 @@ if __name__ == "__main__":
 
         for data_pct in exp_config["data_budgets"]:
             for seed in exp_config["seeds"]:
+                pending_models = [
+                    m for m in model_keys
+                    if not (args.resume and _already_done(language, m, data_pct, seed, config, "bt_augmented"))
+                ]
+                if not pending_models:
+                    logger.info(f"SKIP (all models already done): {language} | pct={data_pct} | seed={seed}")
+                    continue
+
                 subset = stratified_subset(train_full, "canonical_label", data_pct, seed)
                 augmented = augment_dataframe(
                     subset, text_col, language, translation_model, translation_tokenizer, device, max_ratio
@@ -51,7 +60,7 @@ if __name__ == "__main__":
                     f"{language} pct={data_pct} seed={seed}: original={len(subset)} + augmented={len(augmented)} = {len(combined)}"
                 )
 
-                for model_key in model_keys:
+                for model_key in pending_models:
                     logger.info(f"=== AUGMENTED: {language} | {model_key} | pct={data_pct} | seed={seed} ===")
                     res = run_one(
                         language, model_key, data_pct=data_pct, seed=seed,

@@ -1,0 +1,60 @@
+{
+  "language": "hindi",
+  "model": "indicbert_v2",
+  "data_pct": 0.1,
+  "seed": 123,
+  "run_tag": "",
+  "train_examples": 248,
+  "train_time_sec": 256.42,
+  "inference_time_sec": 1.35,
+  "checkpoint_path": "D:\\LRI\\checkpoints\\hindi_indicbert_v2_0.1_123",
+  "metrics": {
+    "loss": 1.0566375255584717,
+    "accuracy": 0.3935483870967742,
+    "macro_f1": 0.2059748427672956,
+    "macro_precision": 0.2563465783664459,
+    "macro_recall": 0.33534069365451097,
+    "weighted_f1": 0.2388009738283628,
+    "per_class": {
+      "negative": {
+        "precision": 0.375,
+        "recall": 0.030612244897959183,
+        "f1": 0.05660377358490566,
+        "support": 98
+      },
+      "neutral": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 90
+      },
+      "positive": {
+        "precision": 0.39403973509933776,
+        "recall": 0.9754098360655737,
+        "f1": 0.5613207547169812,
+        "support": 122
+      }
+    },
+    "confusion_matrix": [
+      [
+        3,
+        0,
+        95
+      ],
+      [
+        2,
+        0,
+        88
+      ],
+      [
+        3,
+        0,
+        119
+      ]
+    ],
+    "runtime": 1.3479,
+    "samples_per_second": 229.983,
+    "steps_per_second": 14.838,
+    "epoch": 4.838709677419355
+  }
+}

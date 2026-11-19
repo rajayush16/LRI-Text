@@ -11,7 +11,7 @@ glossed over as a fair 3-way comparison.
 import argparse
 
 from src.data.loader import load_indicsentiment, load_processed
-from src.training.trainer import run_one, save_run
+from src.training.trainer import _already_done, run_one, save_run
 from src.utils.config import load_config
 from src.utils.logging import get_logger
 
@@ -27,6 +27,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--models", nargs="+", default=None)
     parser.add_argument("--directions", nargs="+", default=None)
+    parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
 
     config = load_config()
@@ -48,6 +49,10 @@ if __name__ == "__main__":
 
         for model_key in model_keys:
             for seed in exp_config["seeds"]:
+                run_tag = f"xling_{direction}"
+                if args.resume and _already_done(source_lang, model_key, 1.0, seed, config, run_tag):
+                    logger.info(f"SKIP (already done): {direction} | {model_key} | seed={seed}")
+                    continue
                 logger.info(f"=== CROSS-LINGUAL: {direction} | {model_key} | seed={seed} ===")
                 extra_eval = {
                     f"{target_lang}_test": (target_splits["test"], target_text_col),
